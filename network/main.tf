@@ -401,8 +401,4 @@ output "load_balancer_dns_name" {
   value = aws_lb.main.dns_name
 }
 
-<<<<<<< HEAD
-#12345678
-=======
-#123456
->>>>>>> origin/main
+
