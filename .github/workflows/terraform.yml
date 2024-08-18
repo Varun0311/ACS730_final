@@ -27,6 +27,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: us-east-1  # Directly set region value here
+            
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -38,6 +39,12 @@ jobs:
     - name: Terraform Init
       working-directory: ./network
       run: terraform init
+
+    - name: Run Trivy vulnerability scanner (Network)
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+       scan-type: 'filesystem'
+       path: './network'
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
