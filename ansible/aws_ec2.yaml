@@ -1,0 +1,11 @@
+plugin: aws_ec2
+regions:
+  - us-east-1
+keyed_groups:
+  - key: tags.Owner  # Group instances based on the 'Owner' tag
+    prefix: tag
+filters:
+  instance-state-name:
+    - running  # Only include instances that are currently running
+compose:
+  ansible_host: public_ip_address  # Use public IP address as the host
