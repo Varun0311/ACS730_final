@@ -1,0 +1,63 @@
+---
+- hosts: aws_ec2
+  gather_facts: True
+  become: yes
+  
+  vars:
+    source_file: ./index.html
+    dest_file: /var/www/html
+    image_url: https://images.unsplash.com/photo-1517423440428-a5a00ad493e8 # Dog picture from Unsplash
+    image_dest: /var/www/html/images
+
+  tasks:
+    - name: Install Apache Web Server for Amazon Linux
+      yum:
+        name: httpd
+        state: latest
+
+    - name: Print Linux Distribution
+      debug:
+        var: ansible_distribution
+
+    - name: Copy index.html for Amazon Linux
+      copy:
+        src: "{{ source_file }}"
+        dest: "{{ dest_file }}/index.html"
+        mode: '0644'
+      notify: Restart Httpd
+
+    - name: Create images directory
+      file:
+        path: "{{ image_dest }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download dog image from the internet
+      get_url:
+        url: "{{ image_url }}"
+        dest: "{{ image_dest }}/dog.jpg"
+        mode: '0644'
+
+    - name: Start Apache Web Server for Amazon Linux
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Run uptime command
+      shell: /usr/bin/uptime
+      register: result
+
+    - name: Print result variable
+      debug:
+        var: result
+
+    - name: Print debug message
+      debug:
+        msg: "The result was {{ result.stdout }}"
+    
+  handlers:
+    - name: Restart Httpd
+      service:
+        name: httpd
+        state: restarted
