@@ -40,15 +40,13 @@ jobs:
       working-directory: ./network
       run: terraform init
 
-<<<<<<< HEAD
-=======
     - name: Run Trivy vulnerability scanner (Network)
       uses: aquasecurity/trivy-action@0.20.0
       with:
        scan-type: 'filesystem'
        path: './network'
 
->>>>>>> origin/main
+
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       working-directory: ./network
